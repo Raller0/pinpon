@@ -1,4 +1,46 @@
 #game loop
+class useless(sprite.Sprite):
+    
+    def __init__(self,ima,x,y,w,h,speed,keup,kedo,dx,dy):
+        sprite.Sprite.__init__(self)
+        self.image = transform.scale(image.load(ima),(w,h))
+        self.h = h
+        self.w = w
+        self.speed = speed
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.keup = keup
+        self.kedo = kedo
+        self.dx = dx
+        self.dy = dy
+    def undissepear(self):
+        window.blit(self.image,(self.rect.x,self.rect.y))
+
+
+class player(useless):
+    
+    def move(self):
+        keys = key.get_pressed()
+        if keys[self.keup] and self.rect.y >= 10 :
+            self.rect.y -= self.speed
+        if keys[self.kedo] and self.rect.y <= 450:
+            self.rect.y += self.speed
+player1 = player("racket.png",10,200,10,50,10,K_w,K_s,3,3)    
+player2 = player("racket.png",690,200,10,50,10,K_UP,K_DOWN,3,3)    
+class ball(useless):
+     
+    def bounce(self):
+        self.rect.x += self.dx
+        self.rect.y += self.dy
+        if self.rect.x < 0:
+            self.dx *= -1
+        if self.rect.y > 480 or self.rect.y < 0:
+            self.dy *= -1
+        if self.rect.colliderect(player1.rect):
+            self.dx *= -1
+        if self.rect.colliderect(player2.rect):
+            self.dx *= -1
 window = display.set_mode((w,h))
 display.set_caption("pinpon")
 
