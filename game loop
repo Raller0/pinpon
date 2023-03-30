@@ -1,0 +1,28 @@
+#game loop
+window = display.set_mode((w,h))
+display.set_caption("pinpon")
+
+Game = False
+finish = False
+clock = time.Clock()
+fps = 60
+
+while Game == False:
+    
+    for j in event.get():
+        
+        if j.type == QUIT:
+            Game = True
+    window.blit(back,(0,0))
+    if not finish:
+        player1.undissepear()
+        player1.move()
+        player2.undissepear()
+        player2.move()
+        b1.undissepear()
+        b1.bounce()
+        
+        
+        clock.tick(fps)
+        display.update()
+        
