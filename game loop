@@ -1,4 +1,16 @@
 #game loop
+from pygame import *
+from random import randint
+from time import time as timer
+font.init()
+w = 700
+h = 500
+font2 = font.Font(None,36)
+win = font2.render('YOU WIN!', True, (255, 255, 255))
+lose = font2.render('YOU LOSE!', True, (180, 0, 0))
+back = transform.scale(image.load("background.png"),(w,h))
+dx = 3
+dy = 3
 class useless(sprite.Sprite):
     
     def __init__(self,ima,x,y,w,h,speed,keup,kedo,dx,dy):
