@@ -1,19 +1,20 @@
-from pygame import *
-from random import randint
-from time import time as timer
+from pygame import *#importing the game library
+
 font.init()
 w = 700
 h = 500
+#seting the width and hight of the window
 font2 = font.Font(None,36)
 score1 = 0
 score2 = 0
-sc1 = font2.render('Score:'+str(score1), True, (0, 0, 255))
-sc2 = font2.render('Score:'+str(score2), True, (255, 0, 0))
-lose = font2.render('YOU LOSE!', True, (180, 0, 0))
+#scores for the players
+lose1 = font2.render('Red Wins', True, (255, 0, 0))
+lose = font2.render('Blue Wins', True, (0, 0, 255))
+#the text to show the result of the battle
 back = transform.scale(image.load("background.png"),(w,h))
+#showing the background
 
-
-class useless(sprite.Sprite):
+class useless(sprite.Sprite):#main class
     
     def __init__(self,ima,x,y,w,h,speed,keup,kedo,dx,dy):
         sprite.Sprite.__init__(self)
@@ -28,11 +29,13 @@ class useless(sprite.Sprite):
         self.kedo = kedo
         self.dx = dx
         self.dy = dy
+    
     def undissepear(self):
         window.blit(self.image,(self.rect.x,self.rect.y))
+    #function to show the players and the ball
 
 
-class player(useless):
+class player(useless):#the class for the rackets
     
     def move(self):
         keys = key.get_pressed()
@@ -40,62 +43,87 @@ class player(useless):
             self.rect.y -= self.speed
         if keys[self.kedo] and self.rect.y <= 440:
             self.rect.y += self.speed
-player1 = player("racket.png",10,200,10,50,10,K_w,K_s,3,3)    
+    #the function for the rackets to move by input
+
+
+player1 = player("racket.png",0,200,10,50,10,K_w,K_s,3,3)    
 player2 = player("racket.png",690,200,10,50,10,K_UP,K_DOWN,3,3)    
-class ball(useless):
-     
+#creating the instances
+
+class ball(useless):#the class for the ball
+    
     def bounce(self):
         self.rect.x += self.dx
         self.rect.y += self.dy
+        #direction speed for y and x(how the ball moves)
         if self.rect.x <= 0:
             global score1
             score1+= 1
             self.rect.x = 250
             self.rect.y = 350
+        #this makes the score go up by 1 for the blue team when the all passes the racket
 
         if self.rect.x >= 700:
             global score2
             score2 += 1
             self.rect.x = 250
             self.rect.y = 350
+        #this makes the score go up by 1 for the red team when the all passes the racket
         if self.rect.y > 480 or self.rect.y < 0:
             self.dy *= -1
+        #this makes the ball bounce on the celling and ground
         if self.rect.colliderect(player1.rect):
             self.dx *= -1
         if self.rect.colliderect(player2.rect):
             self.dx *= -1
-b1 = ball("ball.png",350,200,20,20,5,K_w,K_s,3,3)    
+        #this makes the ball bounce on the rackets
 
-
-
+b1 = ball("ball.png",350,200,20,20,5,K_w,K_s,5,5)    
+#the inctance for the ball
 window = display.set_mode((w,h))
+#creating the window
 display.set_caption("pinpon")
-
-
+#seting a window name
 clock = time.Clock()
 fps = 60
+#this is how many times the game will update in 1 second
 Game = False
 finish = False
     
-while Game == False:
+while Game == False:#this is the game loop
     
     for j in event.get():
         
         if j.type == QUIT:
             Game = True
+        
     window.blit(back,(0,0))
+    #showing the backgound 
+
     
     if not finish:
+        if score1 >= 3:
+            finish = True
+            window.blit(lose,(300,250))
+        elif score2 >= 3:
+            finish = True
+            window.blit(lose1,(300,250))
+        #if any of the scores reached 3 then end the game
+
+        sc1 = font2.render('Score:'+str(score1), True, (0, 0, 255))
+        sc2 = font2.render('Score:'+str(score2), True, (255, 0, 0))
         window.blit(sc2,(30,0))
         window.blit(sc1,(585,0))
+        #creating and showing the scores for the game
+
         player1.undissepear()
         player1.move()
         player2.undissepear()
         player2.move()
         b1.undissepear()
         b1.bounce()
-        score1 += 1
+        #showing the rackets and the ball and makeing them move
         
         clock.tick(fps)
         display.update()
-        
+        #this is to update the game evry loop
